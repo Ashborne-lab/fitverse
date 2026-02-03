@@ -1,0 +1,96 @@
+/* Global Styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-weight: bold;
+}
+
+/* Cards */
+.card {
+    border-radius: 10px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+/* Buttons */
+.btn {
+    border-radius: 5px;
+    padding: 8px 16px;
+}
+
+.btn-primary {
+    background-color: #4361ee;
+    border-color: #4361ee;
+}
+
+.btn-primary:hover {
+    background-color: #3a56d4;
+    border-color: #3a56d4;
+}
+
+/* Tables */
+.table th {
+    font-weight: 600;
+    background-color: #f8f9fa;
+}
+
+/* Leaderboard */
+.leaderboard-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+/* Dashboard stats */
+.stats-card {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.3s;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+.stats-icon {
+    font-size: 2.5rem;
+    margin-bottom: 15px;
+    color: #4361ee;
+}
+
+/* Footer */
+.footer {
+    margin-top: 3rem;
+    padding: 1.5rem 0;
+    background-color: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .card {
+        margin-bottom: 20px;
+    }
+    
+    .stats-card {
+        margin-bottom: 15px;
+    }
+}

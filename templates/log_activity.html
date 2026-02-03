@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+
+{% block title %}FitVerse - Log Activity{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h3 class="card-title mb-0">Log Fitness Activity</h3>
+            </div>
+            <div class="card-body">
+                {% if form.challenge.choices|length > 0 %}
+                <form method="POST" action="{{ url_for('log_activity') }}">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-3">
+                        {{ form.challenge.label(class="form-label") }}
+                        {{ form.challenge(class="form-select") }}
+                        {% if form.challenge.errors %}
+                            <div class="text-danger">
+                                {% for error in form.challenge.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.activity_type.label(class="form-label") }}
+                        {{ form.activity_type(class="form-control") }}
+                        {% if form.activity_type.errors %}
+                            <div class="text-danger">
+                                {% for error in form.activity_type.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="form-text">
+                            Examples: Steps, Distance (km), Weight (kg), Reps, Time (minutes)
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        {{ form.activity_data.label(class="form-label") }}
+                        {{ form.activity_data(class="form-control") }}
+                        {% if form.activity_data.errors %}
+                            <div class="text-danger">
+                                {% for error in form.activity_data.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+                {% else %}
+                <div class="text-center py-4">
+                    <p>You need to join a challenge before logging activities.</p>
+                    <a href="{{ url_for('challenges') }}" class="btn btn-primary">Browse Challenges</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Activity Examples -->
+<div class="row mt-4 justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-light">
+                <h5 class="card-title mb-0">Activity Tracking Examples</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-0">
+                            <div class="card-body text-center">
+                                <i class="fas fa-walking fa-2x text-primary mb-2"></i>
+                                <h6>Steps</h6>
+                                <p class="small text-muted">Record your daily step count</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-0">
+                            <div class="card-body text-center">
+                                <i class="fas fa-running fa-2x text-primary mb-2"></i>
+                                <h6>Distance</h6>
+                                <p class="small text-muted">Log your running/walking distance (km)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100 border-0">
+                            <div class="card-body text-center">
+                                <i class="fas fa-dumbbell fa-2x text-primary mb-2"></i>
+                                <h6>Weight Training</h6>
+                                <p class="small text-muted">Track weight lifted or reps completed</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

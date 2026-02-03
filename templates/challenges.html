@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}FitVerse - Challenges{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h1>Fitness Challenges</h1>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('add_challenge') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Create Challenge
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p class="card-text">Browse our active fitness challenges and join the ones that interest you. Track your progress and compete with others!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if challenges %}
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for challenge in challenges %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ challenge.Name_ }}</h5>
+                <p class="card-text">
+                    <small class="text-muted">
+                        <i class="fas fa-calendar-alt me-1"></i> 
+                        {{ challenge.StartDate.strftime('%b %d, %Y') }} - {{ challenge.EndDate.strftime('%b %d, %Y') }}
+                    </small>
+                </p>
+                <p class="card-text">Join this challenge and start tracking your fitness journey!</p>
+            </div>
+            <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between">
+                {% if current_user.is_authenticated %}
+                <form action="{{ url_for('join_challenge', challenge_id=challenge.ChallengeID) }}" method="post">
+                    <button type="submit" class="btn btn-primary">Join Challenge</button>
+                </form>
+                {% else %}
+                <a href="{{ url_for('login') }}" class="btn btn-outline-primary">Login to Join</a>
+                {% endif %}
+                <a href="{{ url_for('leaderboard', challenge_id=challenge.ChallengeID) }}" class="btn btn-outline-secondary">View Leaderboard</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="row">
+    <div class="col-12 text-center py-5">
+        <p class="lead">No active challenges at the moment.</p>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('add_challenge') }}" class="btn btn-primary btn-lg">Create the First Challenge</a>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+{% endblock %} 

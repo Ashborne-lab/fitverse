@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}FitVerse - Leaderboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h1>{{ challenge.Name_ }} Leaderboard</h1>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('calculate_leaderboard', challenge_id=challenge.ChallengeID) }}" class="btn btn-primary">
+            <i class="fas fa-sync-alt me-2"></i>Update Leaderboard
+        </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <p><i class="fas fa-calendar-alt me-2"></i><strong>Challenge Period:</strong> {{ challenge.StartDate.strftime('%b %d, %Y') }} - {{ challenge.EndDate.strftime('%b %d, %Y') }}</p>
+                <p class="mb-0">View current rankings and see how you stack up against other participants!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8 mb-4">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Current Rankings</h5>
+            </div>
+            <div class="card-body">
+                {% if leaderboard_entries %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>User</th>
+                                <th>Points</th>
+                                <th>Medal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for entry in leaderboard_entries %}
+                            <tr {% if current_user.is_authenticated and entry.UserId == current_user.User_Id %}class="table-primary"{% endif %}>
+                                <td>{{ entry.Rank_ }}</td>
+                                <td>{{ entry.user.Name_ }}</td>
+                                <td>{{ entry.Points }}</td>
+                                <td>
+                                    {% if entry.Rank_ == 1 %}
+                                    <i class="fas fa-medal text-warning" title="Gold Medal"></i>
+                                    {% elif entry.Rank_ == 2 %}
+                                    <i class="fas fa-medal text-secondary" title="Silver Medal"></i>
+                                    {% elif entry.Rank_ == 3 %}
+                                    <i class="fas fa-medal" style="color: #CD7F32;" title="Bronze Medal"></i>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <p>No leaderboard data yet. Start logging activities to appear on the leaderboard!</p>
+                    {% if current_user.is_authenticated %}
+                    <div class="d-flex justify-content-center gap-2">
+                        <a href="{{ url_for('log_activity') }}" class="btn btn-primary">Log Activity</a>
+                        <a href="{{ url_for('calculate_leaderboard', challenge_id=challenge.ChallengeID) }}" class="btn btn-outline-primary">
+                            <i class="fas fa-sync-alt me-2"></i>Calculate Rankings
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card shadow mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Top Performers</h5>
+            </div>
+            <div class="card-body">
+                {% if leaderboard_entries %}
+                {% for entry in leaderboard_entries[:3] %}
+                <div class="d-flex align-items-center mb-3 p-2 {% if loop.index == 1 %}bg-warning bg-opacity-10{% elif loop.index == 2 %}bg-secondary bg-opacity-10{% elif loop.index == 3 %}bg-opacity-10{% endif %} rounded">
+                    <div class="me-3">
+                        {% if loop.index == 1 %}
+                        <i class="fas fa-trophy fa-2x text-warning"></i>
+                        {% elif loop.index == 2 %}
+                        <i class="fas fa-trophy fa-2x text-secondary"></i>
+                        {% elif loop.index == 3 %}
+                        <i class="fas fa-trophy fa-2x" style="color: #CD7F32;"></i>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h5 class="mb-0">{{ entry.user.Name_ }}</h5>
+                        <p class="mb-0 text-muted">{{ entry.Points }} points</p>
+                    </div>
+                </div>
+                {% endfor %}
+                {% else %}
+                <p class="text-center">No participants yet</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        {% if current_user.is_authenticated %}
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="card-title mb-0">Join This Challenge</h5>
+            </div>
+            <div class="card-body">
+                <p>Want to participate in this challenge? Join now and start logging your activities!</p>
+                <form action="{{ url_for('join_challenge', challenge_id=challenge.ChallengeID) }}" method="post">
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Join Challenge</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %} 

@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}FitVerse - Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h1>Admin Dashboard</h1>
+        <a href="{{ url_for('logout') }}" class="btn btn-outline-danger">
+            <i class="fas fa-sign-out-alt me-2"></i>Logout
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Sidebar with admin actions -->
+    <div class="col-md-3 mb-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="card-title mb-0">Admin Actions</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="#users" class="list-group-item list-group-item-action">
+                    <i class="fas fa-users me-2"></i> Manage Users
+                </a>
+                <a href="#challenges" class="list-group-item list-group-item-action">
+                    <i class="fas fa-trophy me-2"></i> Manage Challenges
+                </a>
+                <a href="#activities" class="list-group-item list-group-item-action">
+                    <i class="fas fa-chart-line me-2"></i> Activity Logs
+                </a>
+                <a href="{{ url_for('add_challenge') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-plus me-2"></i> Create Challenge
+                </a>
+            </div>
+        </div>
+        
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="card-title mb-0">System Stats</h5>
+            </div>
+            <div class="card-body">
+                <p><i class="fas fa-users me-2"></i> <strong>Total Users:</strong> {{ users|length }}</p>
+                <p><i class="fas fa-trophy me-2"></i> <strong>Active Challenges:</strong> {{ challenges|length }}</p>
+                <p><i class="fas fa-chart-line me-2"></i> <strong>Activity Logs:</strong> {{ activities|length }}</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main content area -->
+    <div class="col-md-9">
+        <!-- User Management -->
+        <div id="users" class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white">
+                <h5 class="card-title mb-0">User Management</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Phone</th>
+                                <th>Registration Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <td>{{ user.User_Id }}</td>
+                                <td>{{ user.Name_ }}</td>
+                                <td>{{ user.Email }}</td>
+                                <td>{{ user.Phone_no }}</td>
+                                <td>{{ user.RegistrationDate.strftime('%Y-%m-%d') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Challenge Management -->
+        <div id="challenges" class="card shadow-sm mb-4">
+            <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                <h5 class="card-title mb-0">Challenge Management</h5>
+                <a href="{{ url_for('add_challenge') }}" class="btn btn-sm btn-light">
+                    <i class="fas fa-plus me-1"></i> New Challenge
+                </a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Participants</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for challenge in challenges %}
+                            <tr>
+                                <td>{{ challenge.ChallengeID }}</td>
+                                <td>{{ challenge.Name_ }}</td>
+                                <td>{{ challenge.StartDate.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ challenge.EndDate.strftime('%Y-%m-%d') }}</td>
+                                <td>{{ challenge.participations|length }}</td>
+                                <td>
+                                    <a href="{{ url_for('leaderboard', challenge_id=challenge.ChallengeID) }}" class="btn btn-sm btn-primary">Leaderboard</a>
+                                    <a href="{{ url_for('calculate_leaderboard', challenge_id=challenge.ChallengeID) }}" class="btn btn-sm btn-secondary">
+                                        <i class="fas fa-sync-alt"></i> Update Rankings
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Activity Logs -->
+        <div id="activities" class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="card-title mb-0">Activity Logs</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Log ID</th>
+                                <th>User</th>
+                                <th>Challenge</th>
+                                <th>Activity Type</th>
+                                <th>Data</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for activity in activities|sort(attribute='LogTimestamp', reverse=True)[:50] %}
+                            <tr>
+                                <td>{{ activity.LogID }}</td>
+                                <td>{{ activity.user.Name_ }}</td>
+                                <td>{{ activity.challenge.Name_ }}</td>
+                                <td>{{ activity.ActivityType }}</td>
+                                <td>{{ activity.ActivityData }}</td>
+                                <td>{{ activity.LogTimestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

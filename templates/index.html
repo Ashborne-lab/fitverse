@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}FitVerse - Home{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 text-center mb-5">
+        <h1 class="display-4 mb-4"><i class="fas fa-dumbbell text-primary me-3"></i>Welcome to FitVerse</h1>
+        <p class="lead">Join fitness challenges, track your progress, and compete with friends!</p>
+        {% if not current_user.is_authenticated %}
+        <div class="mt-4">
+            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg me-2">Sign Up</a>
+            <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">Login</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Featured Challenges -->
+<div class="row">
+    <div class="col-12 mb-4">
+        <h2 class="text-center mb-4">Active Challenges</h2>
+    </div>
+    
+    {% if challenges %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for challenge in challenges %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ challenge.Name_ }}</h5>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            <i class="fas fa-calendar-alt me-1"></i> 
+                            {{ challenge.StartDate.strftime('%b %d, %Y') }} - {{ challenge.EndDate.strftime('%b %d, %Y') }}
+                        </small>
+                    </p>
+                    <p class="card-text">Join this challenge and start tracking your fitness journey!</p>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    {% if current_user.is_authenticated %}
+                    <form action="{{ url_for('join_challenge', challenge_id=challenge.ChallengeID) }}" method="post">
+                        <button type="submit" class="btn btn-sm btn-primary">Join Challenge</button>
+                    </form>
+                    {% else %}
+                    <a href="{{ url_for('login') }}" class="btn btn-sm btn-outline-primary">Login to Join</a>
+                    {% endif %}
+                    <a href="{{ url_for('leaderboard', challenge_id=challenge.ChallengeID) }}" class="btn btn-sm btn-outline-secondary ms-2">Leaderboard</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="col-12 text-center">
+        <p>No active challenges at the moment. Check back later!</p>
+        {% if current_user.is_authenticated %}
+        <a href="{{ url_for('add_challenge') }}" class="btn btn-primary">Create a Challenge</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<!-- How It Works -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h2 class="text-center mb-4">How It Works</h2>
+    </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Sign Up</h5>
+                <p class="card-text">Create your account to get started with fitness tracking and challenges.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <i class="fas fa-trophy fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Join Challenges</h5>
+                <p class="card-text">Browse and join fitness challenges that interest you.</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 text-center mb-4">
+        <div class="card h-100 border-0 shadow-sm">
+            <div class="card-body">
+                <i class="fas fa-chart-line fa-3x text-primary mb-3"></i>
+                <h5 class="card-title">Track Progress</h5>
+                <p class="card-text">Log your activities, track progress, and compete on the leaderboard.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
