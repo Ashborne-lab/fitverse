@@ -6,12 +6,24 @@ import time
 
 # ✅ DB Connection Function
 def get_connection():
-    return mysql.connector.connect(
-        host="127.0.0.1",
-        user="root",
-        password="@Hum42",
-        database="fitness_manager_system"
-    )
+    # Use Streamlit secrets for database credentials
+    # If specifically running locally with no secrets.toml, you might want a fallback,
+    # but for cloud deployment, secrets are best.
+    if "mysql" in st.secrets:
+        return mysql.connector.connect(
+            host=st.secrets["mysql"]["host"],
+            user=st.secrets["mysql"]["user"],
+            password=st.secrets["mysql"]["password"],
+            database=st.secrets["mysql"]["database"]
+        )
+    else:
+        # Fallback for local testing if secrets aren't set up
+        return mysql.connector.connect(
+            host="127.0.0.1",
+            user="root",
+            password="@Hum42",
+            database="fitness_manager_system"
+        )
 
 # Add custom CSS styling
 def local_css():
